@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Propuesta — Plataforma Académica + IA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #FAF8F3; --bg-panel: #F1ECE1; --bg-panel-2: #EAE3D4;
+    --ink: #2B2A24; --ink-soft: #5B5A4F; --line: #D9D0BC;
+    --pine: #1F3A34; --pine-soft: #33544C; --bronze: #A9793F; --bronze-soft: #C79A5F;
+    --card-bg: #FFFFFF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #14201D; --bg-panel: #1B2B26; --bg-panel-2: #21332D;
+      --ink: #EFE9DC; --ink-soft: #B9B2A2; --line: #33473F;
+      --pine: #7FB3A3; --pine-soft: #9FCABC; --bronze: #D6AE73; --bronze-soft: #E6C892;
+      --card-bg: #1B2B26;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #14201D; --bg-panel: #1B2B26; --bg-panel-2: #21332D;
+    --ink: #EFE9DC; --ink-soft: #B9B2A2; --line: #33473F;
+    --pine: #7FB3A3; --pine-soft: #9FCABC; --bronze: #D6AE73; --bronze-soft: #E6C892;
+    --card-bg: #1B2B26;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif; line-height: 1.55; font-size: 16px;
+    padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  h1, h2, h3 { font-family: 'Fraunces', Georgia, serif; color: var(--ink); margin: 0; }
+  .wrap { max-width: 900px; margin: 0 auto; padding: 0 26px 100px; }
+  .icon { width: 26px; height: 26px; color: var(--bronze); flex-shrink: 0; }
+
+  /* ---- Hero ---- */
+  .cover { background: linear-gradient(180deg, var(--pine) 0%, #16302A 100%); color: #F5F1E6; padding: 68px 26px 46px; }
+  .cover-inner { max-width: 900px; margin: 0 auto; }
+  .eyebrow { font-size: 0.8rem; color: var(--bronze-soft); margin-bottom: 14px; letter-spacing: 0.03em; }
+  .cover h1 { color: #FBF7EC; font-size: clamp(1.7rem, 4.4vw, 2.5rem); font-weight: 600; line-height: 1.18; max-width: 22ch; }
+  .cover p.lede { margin-top: 14px; font-size: 1rem; color: #D9E4DF; max-width: 52ch; }
+  .pain-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 26px; }
+  .pain-chip { background: rgba(245,241,230,0.08); border: 1px solid rgba(245,241,230,0.18); border-radius: 20px; padding: 7px 14px; font-size: 0.82rem; color: #E3ECE8; }
+
+  nav.toc { background: var(--bg-panel); border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 10; overflow-x: auto; white-space: nowrap; }
+  nav.toc .toc-inner { max-width: 900px; margin: 0 auto; padding: 12px 26px; display: flex; gap: 18px; }
+  nav.toc a { color: var(--ink-soft); text-decoration: none; font-size: 0.8rem; font-weight: 500; }
+  nav.toc a:hover { color: var(--pine); }
+
+  section { padding: 48px 0 8px; border-bottom: 1px solid var(--line); }
+  section:last-of-type { border-bottom: none; }
+  .section-num { font-family: 'Fraunces', serif; color: var(--bronze); font-size: 0.9rem; font-weight: 600; margin-bottom: 8px; }
+  h2.section-title { font-size: 1.45rem; font-weight: 600; margin-bottom: 6px; max-width: 34ch; }
+  p.sub { color: var(--ink-soft); margin-top: 0; margin-bottom: 20px; font-size: 0.94rem; max-width: 60ch; }
+  p { color: var(--ink-soft); max-width: 68ch; }
+
+  /* ---- glossary tooltip ---- */
+  .term { position: relative; border-bottom: 1px dotted var(--bronze); cursor: help; font-weight: 600; color: var(--ink); }
+  .term .tip {
+    position: absolute; left: 0; bottom: 130%; background: var(--pine); color: #FBF7EC;
+    font-size: 0.76rem; font-weight: 400; padding: 9px 12px; border-radius: 6px; width: 220px; line-height: 1.4;
+    box-shadow: 0 8px 20px rgba(0,0,0,.18); opacity: 0; pointer-events: none; transform: translateY(4px);
+    transition: opacity .15s, transform .15s; z-index: 30;
+  }
+  .term:hover .tip, .term:focus .tip, .term.open .tip { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+  /* ---- About / profile ---- */
+  .profile-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 8px; padding: 26px; display: flex; gap: 20px; flex-wrap: wrap; align-items: center; }
+  .profile-avatar { width: 64px; height: 64px; border-radius: 50%; background: var(--pine); color: #FBF7EC; font-family: 'Fraunces', serif; font-size: 1.4rem; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .profile-info h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: 2px; }
+  .profile-info .role { color: var(--bronze); font-size: 0.85rem; font-weight: 600; margin-bottom: 10px; }
+  .profile-tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+  .profile-tags span { background: var(--bg-panel); font-size: 0.78rem; color: var(--ink-soft); padding: 5px 11px; border-radius: 14px; }
+  .btn-portfolio { display: inline-flex; align-items: center; gap: 6px; background: var(--pine); color: #FBF7EC; text-decoration: none; padding: 9px 16px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; }
+
+  /* ---- Solution grid ---- */
+  .sol-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; }
+  .sol-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 8px; padding: 18px; display: flex; gap: 12px; align-items: flex-start; }
+  .sol-card h4 { font-size: 0.98rem; font-weight: 600; margin-bottom: 3px; }
+  .sol-card p { font-size: 0.85rem; margin: 0; color: var(--ink-soft); }
+
+  /* ---- Phase plan card ---- */
+  .plan-card { background: var(--card-bg); border: 1px solid var(--line); border-radius: 8px; padding: 22px 22px 18px; margin-bottom: 16px; }
+  .plan-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .plan-head h3 { font-size: 1.1rem; font-weight: 600; }
+  .plan-weeks { font-size: 0.78rem; color: var(--ink-soft); margin-top: 2px; }
+  .plan-value { font-family: 'Fraunces', serif; font-weight: 600; color: var(--bronze); font-size: 1.2rem; }
+  .badge { display: inline-block; font-size: 0.63rem; font-weight: 700; color: #FBF7EC; background: var(--pine-soft); padding: 3px 9px; border-radius: 20px; margin-right: 7px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .plan-priority { margin-top: 12px; background: var(--bg-panel); border-radius: 5px; padding: 11px 13px; font-size: 0.87rem; color: var(--ink); }
+  .plan-costs { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 7px; }
+  .cost-chip { background: var(--bg-panel-2); border-radius: 20px; padding: 5px 12px; font-size: 0.76rem; color: var(--ink-soft); }
+
+  /* ---- Why us ---- */
+  .why-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; }
+  .why-card { padding: 4px 0; }
+  .why-card h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 4px; }
+  .why-card p { font-size: 0.85rem; margin: 0; }
+
+  /* ---- Investment ---- */
+  .invest-card { background: var(--pine); color: #F5F1E6; border-radius: 8px; padding: 30px 26px; margin: 6px 0 26px; display: flex; flex-wrap: wrap; gap: 20px; justify-content: space-between; align-items: flex-end; }
+  .invest-card .big { font-family: 'Fraunces', serif; font-size: 2.3rem; font-weight: 600; color: #FBF7EC; }
+  .invest-card .label { font-size: 0.8rem; color: #A9BEB7; margin-bottom: 6px; }
+  .pay-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; margin: 16px 0; }
+  .pay-item { background: var(--card-bg); border: 1px solid var(--line); border-radius: 6px; padding: 15px; }
+  .pay-item .pct { font-family: 'Fraunces', serif; font-size: 1.3rem; font-weight: 600; color: var(--bronze); }
+  .pay-item .amt { font-size: 0.9rem; color: var(--ink); margin: 3px 0; font-weight: 600; }
+  .pay-item .when { font-size: 0.76rem; color: var(--ink-soft); }
+
+  .note { background: var(--bg-panel); border-left: 3px solid var(--bronze); padding: 12px 16px; margin: 16px 0; font-size: 0.85rem; color: var(--ink-soft); max-width: 68ch; border-radius: 0 5px 5px 0; }
+  .note strong { color: var(--ink); }
+
+  .rate-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px dashed var(--line); font-size: 0.87rem; }
+  .rate-row:last-child { border-bottom: none; }
+  .rate-row .price { color: var(--ink); font-weight: 600; font-family: 'Fraunces', serif; }
+
+  ul.plain { margin: 0; padding: 0; list-style: none; max-width: 68ch; }
+  ul.plain li { padding: 7px 0 7px 20px; position: relative; color: var(--ink-soft); font-size: 0.9rem; border-bottom: 1px dashed var(--line); }
+  ul.plain li:last-child { border-bottom: none; }
+  ul.plain li::before { content: ""; position: absolute; left: 0; top: 15px; width: 5px; height: 5px; border-radius: 50%; background: var(--bronze); }
+
+  footer { padding: 40px 0 20px; text-align: center; color: var(--ink-soft); font-size: 0.82rem; }
+</style>
+</head>
+<body>
+
+<div class="cover">
+  <div class="cover-inner">
+    <div class="eyebrow">PROPUESTA DE IMPLEMENTACIÓN</div>
+    <h1>Tu academia funcionando sola: matrícula, clases, pagos y atención al cliente, automatizados.</h1>
+    <p class="lede">Una plataforma completa para vender, enseñar y certificar en línea — sin que tengas que estar pendiente de cada mensaje o cada pago.</p>
+    <div class="pain-row">
+      <span class="pain-chip">😓 Mensajes de WhatsApp sin responder a tiempo</span>
+      <span class="pain-chip">📋 Matrícula y pagos manuales</span>
+      <span class="pain-chip">🎥 Clases sin proteger ni certificar</span>
+    </div>
+  </div>
+</div>
+
+<nav class="toc">
+  <div class="toc-inner">
+    <a href="#perfil">Quién soy</a>
+    <a href="#solucion">La solución</a>
+    <a href="#fases">Fases</a>
+    <a href="#porque">Por qué nosotros</a>
+    <a href="#inversion">Inversión</a>
+    <a href="#soporte">Soporte</a>
+    <a href="#condiciones">Condiciones</a>
+  </div>
+</nav>
+
+<div class="wrap">
+
+  <section id="perfil">
+    <div class="section-num">01</div>
+    <h2 class="section-title">Quién va a construir esto</h2>
+    <p class="sub">No es un plugin genérico — es alguien con experiencia real en diseño, UX y comercio digital detrás de cada decisión.</p>
+    <div class="profile-card">
+      <div class="profile-avatar">OV</div>
+      <div class="profile-info">
+        <h3>Omar Augusto Vargas Munar</h3>
+        <div class="role">Diseñador &amp; desarrollador web · +5 años de experiencia</div>
+        <div class="profile-tags">
+          <span>Sitios locales e internacionales</span>
+          <span>UX / experiencia de usuario</span>
+          <span>Marketing digital &amp; edición</span>
+          <span>Actualmente líder de e-commerce en Serranía</span>
+        </div>
+        <a class="btn-portfolio" href="https://www.behance.net/omarvargas777" target="_blank" rel="noopener">Ver portafolio en Behance ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section id="solucion">
+    <div class="section-num">02</div>
+    <h2 class="section-title">La solución, en 8 piezas</h2>
+    <p class="sub">Todo conectado entre sí, no herramientas sueltas que hay que hacer hablar entre ellas.</p>
+    <div class="sol-grid">
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="1"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg>
+        <div><h4>Sitio institucional</h4><p>Presenta tus programas y convierte visitas en matrículas.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L2 8 L12 13 L22 8 Z"/><path d="M6 10 V16 C6 18 9 19 12 19 C15 19 18 18 18 16 V10"/></svg>
+        <div><h4>Campus virtual (<span class="term" tabindex="0">LMS<span class="tip">Sistema donde tus estudiantes ven las clases, hacen tareas y avanzan en el curso.</span></span>)</h4><p>Cursos, evaluaciones y progreso, todo en un solo lugar.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v12H8l-4 4z"/></svg>
+        <div><h4>Agente comercial con IA</h4><p>Responde WhatsApp 24/7 y agenda con un asesor cuando hace falta.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2 L13.5 9 L21 10.5 L13.5 12 L12 19.5 L10.5 12 L3 10.5 L10.5 9 Z"/></svg>
+        <div><h4>Tutor académico con IA</h4><p>Responde dudas de las estudiantes basado en tus propios manuales.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="13" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <div><h4>Pagos automáticos</h4><p>Ecuador e internacional, con opción de cuotas. Acceso instantáneo al pagar.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 L20 6 V12 C20 17 16.5 20 12 21 C7.5 20 4 17 4 12 V6 Z"/><polygon points="10,9 16,12 10,15" fill="currentColor" stroke="none"/></svg>
+        <div><h4>Video protegido</h4><p>Bloquea descargas y marca cada video con el nombre de quien lo ve.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="M9 14 L7 21 L12 18 L17 21 L15 14"/></svg>
+        <div><h4>Certificación digital</h4><p>Diploma automático con código QR de validación al aprobar.</p></div>
+      </div>
+      <div class="sol-card">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><line x1="3" y1="10" x2="21" y2="10"/><line x1="8" y1="3" x2="8" y2="7"/><line x1="16" y1="3" x2="16" y2="7"/></svg>
+        <div><h4>Agendamiento de prácticas</h4><p>Cupos por sede y fecha, sin cruces ni hojas de cálculo.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="fases">
+    <div class="section-num">03</div>
+    <h2 class="section-title">Cómo se construye, fase por fase</h2>
+    <p class="sub">Avanzas viendo resultado en cada etapa — no esperas 10 semanas para ver algo funcionando.</p>
+
+    <div class="plan-card">
+      <div class="plan-head">
+        <h3>Fase 1 — Sitio y base de la plataforma</h3>
+        <div class="plan-value">USD 400</div>
+      </div>
+      <div class="plan-weeks">Semanas 1 – 3</div>
+      <div class="plan-priority"><span class="badge">Prioridad</span>Diseño del sitio — es lo primero que ven tus clientes, se hace bien desde el día uno.</div>
+      <div class="plan-costs">
+        <span class="cost-chip">Hosting</span>
+        <span class="cost-chip">Dominio</span>
+        <span class="cost-chip">Elementor Pro</span>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-head">
+        <h3>Fase 2 — Campus, pagos y agendamiento</h3>
+        <div class="plan-value">USD 400</div>
+      </div>
+      <div class="plan-weeks">Semanas 4 – 6</div>
+      <div class="plan-priority"><span class="badge">Prioridad</span>Pagos y reservas de prácticas — las dos piezas que más dependen de cuentas externas, se activan primero.</div>
+      <div class="plan-costs">
+        <span class="cost-chip">Tutor LMS</span>
+        <span class="cost-chip">Pasarela de pago</span>
+        <span class="cost-chip">Streaming protegido</span>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-head">
+        <h3>Fase 3 — Inteligencia artificial</h3>
+        <div class="plan-value">USD 400</div>
+      </div>
+      <div class="plan-weeks">Semanas 7 – 8</div>
+      <div class="plan-priority"><span class="badge">Prioridad</span>Tutor académico con <span class="term" tabindex="0">RAG<span class="tip">Técnica que hace que la IA responda basándose solo en tus manuales, no inventando respuestas.</span></span> — la pieza más técnica, se arranca de primero para tener margen de ajuste.</div>
+      <div class="plan-costs">
+        <span class="cost-chip">OpenAI API</span>
+        <span class="cost-chip">Make</span>
+        <span class="cost-chip">WhatsApp Business</span>
+      </div>
+    </div>
+
+    <div class="plan-card">
+      <div class="plan-head">
+        <h3>Fase 4 — Pruebas y lanzamiento</h3>
+        <div class="plan-value">USD 200</div>
+      </div>
+      <div class="plan-weeks">Semanas 9 – 10</div>
+      <div class="plan-priority"><span class="badge">Puerta de calidad</span>Pruebas completas del flujo real antes de que empieces a vender con la plataforma en vivo.</div>
+      <div class="plan-costs">
+        <span class="cost-chip">Zoom (opcional)</span>
+      </div>
+    </div>
+  </section>
+
+  <section id="porque">
+    <div class="section-num">04</div>
+    <h2 class="section-title">Por qué esta propuesta, y no otra</h2>
+    <div class="why-grid">
+      <div class="why-card"><h4>🧩 Todo conectado</h4><p>Sitio, campus, pagos e IA hablando entre sí — no piezas sueltas que hay que ir uniendo después.</p></div>
+      <div class="why-card"><h4>🤝 Un solo responsable</h4><p>No coordinas tres proveedores distintos. Una persona, un contacto, un compromiso.</p></div>
+      <div class="why-card"><h4>🛡️ Contenido protegido desde el día 1</h4><p>Tus clases no se van a filtrar sin dejar rastro de quién lo hizo.</p></div>
+      <div class="why-card"><h4>🎓 Diseño pensado para vender</h4><p>Experiencia real en UX y e-commerce, no solo en programar.</p></div>
+      <div class="why-card"><h4>📞 Un mes de soporte incluido</h4><p>No desaparezco el día que se entrega la plataforma.</p></div>
+      <div class="why-card"><h4>💬 Reglas claras desde el inicio</h4><p>Sabes exactamente qué está incluido y qué no, sin sorpresas.</p></div>
+    </div>
+  </section>
+
+  <section id="inversion">
+    <div class="section-num">05</div>
+    <h2 class="section-title">Inversión</h2>
+    <div class="invest-card">
+      <div>
+        <div class="label">Inversión total · 10 semanas</div>
+        <div class="big">USD 1.400</div>
+      </div>
+    </div>
+    <div class="pay-grid">
+      <div class="pay-item"><div class="pct">40%</div><div class="amt">USD 560</div><div class="when">Al iniciar</div></div>
+      <div class="pay-item"><div class="pct">30%</div><div class="amt">USD 420</div><div class="when">Al aprobar Fase 2</div></div>
+      <div class="pay-item"><div class="pct">20%</div><div class="amt">USD 280</div><div class="when">Al terminar Fase 3</div></div>
+      <div class="pay-item"><div class="pct">10%</div><div class="amt">USD 140</div><div class="when">Contra entrega</div></div>
+    </div>
+    <div class="note"><strong>Aparte de esto:</strong> algunas herramientas quedan a tu nombre (hosting, <span class="term" tabindex="0">API<span class="tip">Conexión que permite que dos sistemas, como WhatsApp y la IA, se comuniquen entre sí.</span></span> de IA, pasarela de pago). Son tuyas para siempre, no un cobro mío — te las detallo por fase antes de empezar cada una para que no te tomen por sorpresa.</div>
+  </section>
+
+  <section id="soporte">
+    <div class="section-num">06</div>
+    <h2 class="section-title">Soporte y ajustes</h2>
+    <p class="sub">Un mes de acompañamiento incluido tras el lanzamiento: corrección de errores, ajustes menores y dudas del equipo administrativo.</p>
+    <div class="rate-row"><span class="desc">Ajuste pequeño</span><span class="price">USD 30–50</span></div>
+    <div class="rate-row"><span class="desc">Ajuste funcional medio</span><span class="price">USD 75–150</span></div>
+    <div class="rate-row"><span class="desc">Nueva funcionalidad</span><span class="price">Desde USD 150</span></div>
+    <div class="rate-row"><span class="desc">Hora adicional de desarrollo</span><span class="price">USD 30/hora</span></div>
+  </section>
+
+  <section id="condiciones">
+    <div class="section-num">07</div>
+    <h2 class="section-title">Para arrancar</h2>
+    <ul class="plain">
+      <li>Inicio con el 40% (USD 560) y el material base listo: textos, logo, manuales, videos</li>
+      <li>Cada fase avanza según se entreguen contenidos y accesos a tiempo</li>
+      <li>Cuentas de WhatsApp Business, pasarela de pago y streaming, a nombre tuyo</li>
+    </ul>
+  </section>
+
+  <footer>Propuesta preparada por Omar Augusto Vargas Munar</footer>
+</div>
+
+<script>
+  document.querySelectorAll('.term').forEach(function(el){
+    el.addEventListener('click', function(e){
+      e.stopPropagation();
+      document.querySelectorAll('.term.open').forEach(function(o){ if(o!==el) o.classList.remove('open'); });
+      el.classList.toggle('open');
+    });
+  });
+  document.addEventListener('click', function(){
+    document.querySelectorAll('.term.open').forEach(function(o){ o.classList.remove('open'); });
+  });
+</script>
+
+</body>
+</html>
